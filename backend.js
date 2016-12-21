@@ -25,10 +25,12 @@ const Seller = mongoose.model('Seller', {
     model: String,
     year: Number,
     sales_price: Number,
+    mileage: Number,
     location: Number,
     photos :[String],
   },
-  email: String
+  email: String,
+  date: Date
   // followers: [ObjectId]  // do not need it for now
 });
 
@@ -40,13 +42,14 @@ const Buyer = mongoose.model('Buyer', {
   // followers: [ObjectId]  // do not need it for now
 });
 
-function newSeller(id, avatar_url, password, vehicle, email) {
+function newSeller(id, avatar_url, password, date, email, vehicle) {
       var newSeller = new Seller({
         _id: id,
         avatar_url: avatar_url,
         password: password,
         vehicle: vehicle,
-        email: email
+        email: email,
+        date: date
       });
 
     return newSeller.save()
@@ -81,13 +84,14 @@ function newSeller(id, avatar_url, password, vehicle, email) {
           var avatar_url = req.body.avatar_url;
           var password = req.body.password;
           var vehicle = req.body.vehicle;
-          var email = req.body.email
+          var email = req.body.email;
+          var date = new Date();
           bcrypt.hash(password, saltRounds)
             .then(function(hash){
               return hash;
             })
             .then(function(hash){
-            return newSeller(user_id, avatar_url, hash, vehicle);
+            return newSeller(user_id, avatar_url, hash, date, email, vehicle);
             })
             .then(function(seller){
               console.log(seller);
@@ -97,6 +101,14 @@ function newSeller(id, avatar_url, password, vehicle, email) {
             .catch(function(err){
               console.log("Failed to create new Seller", err.message);
             });
+        });
+
+        app.get('/api/listings', function(req,res){
+          Seller.find().sort({date:-1})
+          .then(function(results){
+            console.log("Listing results", results);
+            res.send(results);
+          });
         });
 // var feed = new Instafeed({
 //     get: 'tagged',
