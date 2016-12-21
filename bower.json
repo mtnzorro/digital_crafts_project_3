@@ -1,0 +1,17 @@
+{
+  "name": "criuserup",
+  "description": "",
+  "main": "backend.js",
+  "authors": [
+    "Jason Campbell <jrcampbell78@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/mtnzorro/digital_crafts_twit",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,13 @@
+#instafeed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#instafeed a {
+  width: 40%
+}
+
+#instafeed img {
+  width: 80%
+}

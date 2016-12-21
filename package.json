@@ -1,0 +1,16 @@
+{
+  "name": "criuserup",
+  "version": "1.0.0",
+  "main": "backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "instafeed.js": "^1.4.1"
+  },
+  "devDependencies": {},
+  "description": ""
+}

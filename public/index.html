@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CruiserUp</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div id="instafeed"></div>
+  </body>
+  <script src = "instafeed.js"></script>
+  <script type="text/javascript">
+      var feed = new Instafeed({
+          get: 'user',
+          // userId: 172221559,
+          userId: 324945942,
+          accessToken: '324945942.0366715.3bc8c0b57e2d47428b16cd985cb600f4'
+      });
+      feed.run();
+      // console.log(feed);
+      // 324945942
+      // access_token=324945942.0366715.3bc8c0b57e2d47428b16cd985cb600f4
+  </script>
+</html>
