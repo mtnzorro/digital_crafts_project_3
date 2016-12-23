@@ -1,38 +1,29 @@
-var app = angular.module('CruiserUp', ['ui.router']);
+var app = angular.module('CruiserUp', ['ui.router', 'ngFileUpload', 'ngCookies']);
 
-app.factory("CruiserUp_api", function factoryFunction($http, $state){
+app.factory("CruiserGram_api", function factoryFunction($http, $state){
   var service = {};
-  service.worldTweets = function() {
-  return $http({
-    url: '/api/listing'
-  });
-};
+//   service.worldGram = function() {
+//   return $http({
+//     url: '/api/photos'
+//   });
+// };
 
-  service.sellerSignup = function(user_id, password, email, avatar_url, make, model, year, sales_price, mileage, location, photos) {
+  service.userSignup = function(user_id, password, email, avatar_url) {
   return $http({
-    url: '/new_seller',
+    url: '/new_user',
     method: "POST",
     data: {
       user_id : user_id,
       avatar_url  : avatar_url,
       password : password,
-      vehicle : {
-        make: make,
-        model: model,
-        year: year,
-        sales_price: sales_price,
-        mileage: mileage,
-        location: location,
-        photos: photos
-      },
       email: email
     }
   });
 };
 
-  service.listingDisplay = function(){
+  service.gramDisplay = function(){
     return $http({
-      url: '/api/listings'
+      url: '/api/photos'
     });
   };
 
@@ -40,35 +31,79 @@ return service;
 });
 
 
-app.controller('HomeController', function($scope, $state, CruiserUp_api){
+app.controller('HomeController', function($scope, $state, CruiserGram_api){
 
 });
 
-app.controller('ListingsController', function($scope, $state, CruiserUp_api){
-  CruiserUp_api.listingDisplay()
+app.controller('GramsController', function($scope, $state, CruiserGram_api){
+  CruiserGram_api.gramDisplay()
   .then(function(resp){
-    console.log(resp.data)
-    $scope.listingResults = resp.data;
+    // console.log(resp.data)
+    $scope.gramResults = resp.data;
   })
   .catch(function(err){
-    console.log("Error displaying listings:", err.message);
+    console.log("Error displaying photos:", err.message);
   });
 });
 
-app.controller('newSellerController', function($scope, $state, CruiserUp_api){
-  $scope.submitSeller = function(){
+app.controller('newUserController', function($scope, $state, CruiserGram_api){
+  $scope.submitUser = function(){
     if($scope.password1 === $scope.password2){
-      CruiserUp_api.sellerSignup($scope.user_id, $scope.password1, $scope.email, $scope.avatar_url, $scope.make, $scope.model, $scope.year, $scope.sales_price, $scope.mileage, $scope.location, $scope.photos )
+      $scope.avatar_url = '/images/cruiser_av.png';
+      CruiserGram_api.userSignup($scope.user_id, $scope.password1, $scope.email, $scope.avatar_url)
       .then(function(){
-        console.log('Seller signup successful');
-        $state.go('listings');
+        console.log('User signup successful');
+        $state.go('grams');
       })
       .catch(function(err){
-        console.log("Seller signup error:", err.message);
+        console.log("User signup error:", err.message);
       });
     }
   };
 });
+
+app.controller('postGramController', ['$scope', 'Upload', function ($scope, Upload, $state, CruiserGram_api) {
+    // upload later on form submit or something similar
+    $scope.submit = function() {
+      if ($scope.form.file.$valid && $scope.file) {
+        $scope.upload($scope.file);
+      }
+    };
+
+    // upload on file select or drop
+    $scope.upload = function () {
+      var user_id = 'mountainlife';
+      var avatar_url = '/images/cruiser_av.svg';
+        Upload.upload({
+            url: '/gram',
+            data: {
+            file: $scope.file,
+            user_id: user_id,
+            avatar_url: avatar_url,
+            caption: $scope.caption,
+
+
+            }
+        }).then(function (resp) {
+            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+        }, function (resp) {
+            console.log('Error status: ' + resp.status);
+        }, function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+        });
+    };
+    // for multiple files:
+    // $scope.uploadFiles = function (files) {
+    //   if (files && files.length) {
+    //     for (var i = 0; i < files.length; i++) {
+    //       Upload.upload({..., data: {file: files[i]}, ...})...;
+    //     }
+    //     // or send them all together for HTML5 browsers:
+    //     Upload.upload({..., data: {file: files}, ...})...;
+    //   }
+    // }
+}]);
 
 app.config(function($stateProvider, $urlRouterProvider){
   $stateProvider
@@ -80,17 +115,24 @@ app.config(function($stateProvider, $urlRouterProvider){
     controller: 'HomeController'
   })
   .state({
-    name: 'listings',
-    url: '/listings',
-    templateUrl: '/templates/listings.html',
-    controller: 'ListingsController'
+    name: 'grams',
+    url: '/grams',
+    templateUrl: '/templates/grams.html',
+    controller: 'GramsController'
   })
 
   .state({
-    name: 'newSeller',
-    url: '/newSeller',
-    templateUrl: '/templates/newSeller.html',
-    controller: 'newSellerController'
+    name: 'newUser',
+    url: '/newUser',
+    templateUrl: '/templates/newUser.html',
+    controller: 'newUserController'
+  })
+
+  .state({
+    name: 'postGram',
+    url: '/postGram',
+    templateUrl: '/templates/postGram.html',
+    controller: 'postGramController'
   });
 
   $urlRouterProvider.otherwise('/')

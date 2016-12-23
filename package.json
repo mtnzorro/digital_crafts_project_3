@@ -8,12 +8,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^0.6.0",
     "bcrypt": "^1.0.1",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "instafeed.js": "^1.4.1",
-    "mongoose": "^4.7.4"
+    "moment": "^2.17.1",
+    "mongoose": "^4.7.4",
+    "multer": "^1.2.1",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {},
   "description": ""

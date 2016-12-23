@@ -1,0 +1,33 @@
+
+<div class="gramWrapper" ng-repeat = "gram in gramResults">
+
+
+    <div class="gram_content_wrapper">
+      <div class="gram_header_wrapper">
+        <div class="gram_text_content">
+            <img class="user_avatar" src="{{gram.avatar_url}}" alt="">
+            <div class="gram_text_wrapper">
+                  <p class="user_id">
+              {{gram.user_id}}
+            </p>
+            <!-- <p>
+                {{gram.date}}
+            </p> -->
+
+            </div>
+
+
+        </div>
+        <div class="gram_timeline_wrapper">
+            <img class="gram_timeline" src="{{gram.url}}" alt="">
+        </div>
+
+        <p class="gram_text_content">
+          {{gram.caption}}
+        </p>
+
+
+      </div>
+    </div>
+
+</div>
