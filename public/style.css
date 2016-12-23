@@ -16,15 +16,17 @@ body {
 }
 
 .main_nav{
-  display: flex;
   background-color: lightgrey;
   font-family: 'BioRhyme', serif;
   margin-bottom: 3em;
+  padding-top: 0;
 }
+.main_nav h3{display: inline-block;padding: .7em;margin: 0;font-size: 3em;}
 
 .main_nav a{
   text-decoration: none;
   color: white;
+  display: inline-block;
 }
 
 .home_wrapper{
@@ -63,18 +65,18 @@ body {
     border: solid .1em white;
     border-radius: 4px;
     background-color: lightgrey;
+    overflow: hidden;
 
 }
 .gram_timeline{
 
   width: 100%
-  /*height: 16em;*/
 }
 
 .img_icon{
-  width: 3em;
-  height: 3em;
+  width: 55px;
   margin-left: 1em;
+  display: inline-block;
 }
 
 .user_id{
@@ -83,7 +85,6 @@ body {
 
 .gram_text_wrapper{
   display: flex;
-  /*flex-direction: column;*/
   justify-content: space-between;
 }
 
@@ -91,6 +92,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+}
+
+.gram_content_wrapper{
 
 }
 
@@ -105,10 +110,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .signup_wrapper{
-  /*margin-top: 5em;*/
   width: 30em;
   height: 30em;
   display: flex;

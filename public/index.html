@@ -14,16 +14,31 @@
   <script src="/bower_components/moment/moment.js"></script>
     <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
     <link href="https://fonts.googleapis.com/css?family=BioRhyme" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <!-- <script src="angular-cookies.min.js"></script> -->
   <script src="frontend.js"></script>
   </head>
   <body ng-app="CruiserUp">
+
+
+
+
     <nav class="main_nav" ng-controller="HomeController">
-      <a ui-sref="home"><h3>CruiserGram</h3></a>
-      <img class="img_icon" src="images/cruiser_av.svg" alt="">
+        <div class="container">
+      <div class="logo">
+        <a ui-sref="home"><h3>CruiserGram</h3></a>
+        <img class="img_icon" src="images/cruiser_av.svg" alt="">
+      </div>
+    </div>
     </nav>
     <!-- <div id="instafeed"></div> -->
-    <ui-view></ui-view>
+    <div class="container">
+
+    <div class="row">
+      <ui-view></ui-view>
+    </div>
+  </div>
+
   </body>
   <!-- <script src = "instafeed.js"></script>
   <script type="text/javascript">
