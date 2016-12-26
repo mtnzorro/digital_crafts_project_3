@@ -15,6 +15,7 @@
     <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
     <link href="https://fonts.googleapis.com/css?family=BioRhyme" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src="https://use.fontawesome.com/3f9e1e78c2.js"></script>
   <!-- <script src="angular-cookies.min.js"></script> -->
   <script src="frontend.js"></script>
   </head>
@@ -38,6 +39,19 @@
       <ui-view></ui-view>
     </div>
   </div>
+
+    <footer class="footer" ng-controller="HomeController">
+        <div class="container footer_wrapper">
+          <div class="footer_icons">
+            <i ui-sref="home" class="fa fa-home" aria-hidden="true"></i>
+            <i ui-sref="postGram" class="fa fa-plus-square" aria-hidden="true"></i>
+            <i class="fa fa-user-o" aria-hidden="true"></i>
+          </div>
+
+      </div>
+    </footer>
+
+
 
   </body>
   <!-- <script src = "instafeed.js"></script>

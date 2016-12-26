@@ -31,8 +31,8 @@ body {
 
 .home_wrapper{
   display: flex;
-  width: 30em;
-  height: 30em;
+  width: 65em;
+  height: 65em;
   flex-direction: column;
   align-items: center;
   font-family: 'BioRhyme', serif;
@@ -51,15 +51,15 @@ body {
 /*listings*/
 
 .user_avatar{
-  width: 3em;
-  height: 3em;
+  width: 6em;
+  height: 6em;
   border: solid .1em white;
   border-radius: 4px;
   background-color: lightgrey;
 }
 .gram_timeline_wrapper{
-    width: 30em;
-    height: 30em;
+    width: 65em;
+    height: 65em;
     display: flex;
     align-items: center;
     border: solid .1em white;
@@ -69,7 +69,6 @@ body {
 
 }
 .gram_timeline{
-
   width: 100%
 }
 
@@ -81,6 +80,7 @@ body {
 
 .user_id{
   margin-left: 1em;
+  font-size: 2.1em;
 }
 
 .gram_text_wrapper{
@@ -100,7 +100,7 @@ body {
 }
 
 .gram_text_content{
-  width: 30em;
+  width: 65em;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -114,8 +114,8 @@ body {
 }
 
 .signup_wrapper{
-  width: 30em;
-  height: 30em;
+  width: 65em;
+  height: 65em;
   display: flex;
   justify-content: center;
   border: solid .2em white;
@@ -128,4 +128,30 @@ body {
 .signup_button{
   display: flex;
   justify-content: center;
+}
+.footer{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background-color: lightgrey;
+  height: 6em;
+  width: 100%;
+}
+
+.footer_wrapper {
+  display: flex;
+  justify-content: center;
+  width: 65em;
+  align-items: center;
+}
+
+.footer_icons {
+  width: 65em;
+  display: flex;
+  justify-content: space-between;
+  color: #506d9b;
+  font-size: 3em;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: .5em;
 }
