@@ -1,12 +1,17 @@
 <form name="form">
   <!-- Single Image with validations -->
-  <input class="u-full-width" ng-model = "caption" type="text" name="" placeholder = "Caption this photo">
+
   <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
-    ngf-accept="'image/*'" ngf-max-size="10MB" ngf-resize="{width: 1080, height: 1080, quality: 1.0}"
+    ngf-accept="'image/*'" ngf-capture="'camera'" ngf-max-size="10MB" ngf-resize="{width: 1080, height: 1080, quality: 1.0}"
     >Select Image</div>
 
+    <div ng-if="file" class="upload_container">
+      <img class="thumbnail" ngf-thumbnail="file || '/images/cruiser_av.png'">
+        <button class="button" type="submit" ng-click="submit()">Post</button>
+    </div>
+<input ng-if="file" class="u-full-width" ng-model="caption" type="text" name="" placeholder = "Caption this photo">
   <!-- Multiple files -->
   <!-- <div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div> -->
   <!-- Drop files: <div ngf-drop ng-model="files" class="drop-box">Drop</div> -->
-  <button type="submit" ng-click="submit()">Submit</button>
+
 </form>

@@ -68,24 +68,27 @@ app.controller('postGramController', ['$scope', 'Upload', function ($scope, Uplo
       if ($scope.form.file.$valid && $scope.file) {
         $scope.upload($scope.file);
       }
+
     };
 
     // upload on file select or drop
     $scope.upload = function () {
       var user_id = 'mountainlife';
       var avatar_url = '/images/cruiser_av.svg';
+      var caption = $scope.caption;
         Upload.upload({
             url: '/gram',
             data: {
             file: $scope.file,
             user_id: user_id,
             avatar_url: avatar_url,
-            caption: $scope.caption,
-
-
+            caption: caption,
             }
         }).then(function (resp) {
             console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+            // $scope.upload_complete = true;
+            // $state.go('grams');
+            console.log(caption);
         }, function (resp) {
             console.log('Error status: ' + resp.status);
         }, function (evt) {
