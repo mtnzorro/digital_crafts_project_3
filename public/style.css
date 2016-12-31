@@ -172,11 +172,19 @@ body {
 }
 
 .upload_container{
+  width: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 }
 .thumbnail{
   width: 30em;
   margin-bottom: .5em;
+}
+
+.cropArea {
+  background: #E4E4E4;
+  overflow: hidden;
+  width: 20em;
+  height:20em;
 }

@@ -7,8 +7,15 @@
 
     <div ng-if="file" class="upload_container">
       <img class="thumbnail" ngf-thumbnail="file || '/images/cruiser_av.png'">
+      <div class="cropArea">
+          <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
+        </div>
+        <div>Cropped Image:</div>
+ <div><img ng-src="{{myCroppedImage}}" /></div>
         <button class="button" type="submit" ng-click="submit()">Post</button>
+
     </div>
+
 <input ng-if="file" class="u-full-width" ng-model="caption" type="text" name="" placeholder = "Caption this photo">
   <!-- Multiple files -->
   <!-- <div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div> -->

@@ -1,4 +1,4 @@
-var app = angular.module('CruiserUp', ['ui.router', 'ngFileUpload', 'ngCookies']);
+var app = angular.module('CruiserUp', ['ui.router', 'ngFileUpload', 'ngCookies', 'ngImgCrop']);
 
 app.factory("CruiserGram_api", function factoryFunction($http, $state){
   var service = {};
@@ -63,7 +63,22 @@ app.controller('newUserController', function($scope, $state, CruiserGram_api){
 });
 
 app.controller('postGramController', ['$scope', 'Upload', function ($scope, Upload, $state, CruiserGram_api) {
-    // upload later on form submit or something similar
+    //Image cropping
+    $scope.myImage='';
+    $scope.myCroppedImage='';
+
+    var handleFileSelect=function(evt) {
+      var file=evt.currentTarget.files[0];
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        $scope.$apply(function($scope){
+          $scope.myImage=evt.target.result;
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // upload later on form submit
     $scope.submit = function() {
       if ($scope.form.file.$valid && $scope.file) {
         $scope.upload($scope.file);
