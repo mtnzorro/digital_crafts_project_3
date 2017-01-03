@@ -85,7 +85,7 @@ app.controller('newUserController', function($scope, $state, CruiserGram_api){
   };
 });
 
-app.controller('postGramController', ['$scope', 'Upload', function ($scope, Upload, $state, CruiserGram_api) {
+app.controller('postGramController', ['$scope', 'Upload', '$state', function ($scope, Upload, $state, CruiserGram_api) {
     // Image cropping
     // $scope.myImage='';
     // $scope.myCroppedImage='';
@@ -106,7 +106,7 @@ app.controller('postGramController', ['$scope', 'Upload', function ($scope, Uplo
       if ($scope.form.file.$valid && $scope.file) {
         $scope.upload($scope.file);
         console.log('IS this trying to state.go');
-          $state.go('grams');
+
       }
 
     };
@@ -128,6 +128,7 @@ app.controller('postGramController', ['$scope', 'Upload', function ($scope, Uplo
         }).then(function (resp) {
             console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
             $scope.upload_complete = true;
+              $state.go('grams');
             console.log(caption);
         }, function (resp) {
             console.log('Error status: ' + resp.status);
