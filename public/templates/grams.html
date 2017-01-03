@@ -10,10 +10,9 @@
                   <p class="user_id">
               {{gram.user_id}}
             </p>
-            <!-- <p>
-                {{gram.date}}
-            </p> -->
-
+            <p>
+              {{gram.date | date:"MM/dd/yyyy @ h:mma"}}
+            </p>
             </div>
 
 
@@ -24,6 +23,7 @@
 
         <p class="gram_text_content">
           {{gram.caption}}
+
         </p>
 
 

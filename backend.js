@@ -11,6 +11,7 @@ var moment = require('moment');
 var uuidV4 = require('uuid/v4');
 var Storage = require('@google-cloud/storage');
 var CLOUD_BUCKET = 'cruisergram-153403';
+
 // var storage = Storage({
 //   projectId: 'cruisergram-153403'
 // });
@@ -176,6 +177,7 @@ app.post('/gram', multer.single('file'), function(req, res) {
   return newGram(url, date, user_id, name, avatar_url, caption)
   .then(function(gram){
     console.log(gram);
+    console.log(caption);
     res.send(gram);
     console.log("Created new Gram");
   })
@@ -190,6 +192,24 @@ app.get('/api/photos', function(req,res){
   .then(function(results){
     console.log("Photo results", results);
     res.send(results);
+  });
+});
+
+// User Profile page
+app.get('/api/profile-info', function (req, res) {
+  var user_id = req.query.user_id;
+  console.log(user_id);
+  var profile_results = [];
+  bluebird.all([
+    Gram.find({ user_id: user_id }).sort({date:-1}),
+    User.findById(user_id)
+  ])
+  .spread(function(grams, user) {
+    console.log(grams);
+    var grams_arr = [];
+    profile_results.push(user);
+    profile_results.push(grams);
+      res.send(profile_results);
   });
 });
 // var feed = new Instafeed({

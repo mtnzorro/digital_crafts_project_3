@@ -27,6 +27,15 @@ app.factory("CruiserGram_api", function factoryFunction($http, $state){
     });
   };
 
+  service.loadProfile = function(user_id) {
+    return $http({
+      url: '/api/profile-info',
+      params: {
+        user_id: user_id
+      }
+    });
+  };
+
 return service;
 });
 
@@ -35,7 +44,8 @@ app.controller('HomeController', function($scope, $state, CruiserGram_api){
 
 });
 
-app.controller('GramsController', function($scope, $state, CruiserGram_api){
+app.controller('GramsController', function($scope, $stateParams, $state, CruiserGram_api){
+
   CruiserGram_api.gramDisplay()
   .then(function(resp){
     // console.log(resp.data)
@@ -43,6 +53,19 @@ app.controller('GramsController', function($scope, $state, CruiserGram_api){
   })
   .catch(function(err){
     console.log("Error displaying photos:", err.message);
+  });
+});
+
+app.controller('profileController', function($scope, $stateParams, $state, CruiserGram_api){
+    $scope.name = $stateParams.name;
+  CruiserGram_api.loadProfile($scope.name)
+  .then(function(resp){
+    $scope.userResults = resp.data[0];
+    // console.log(resp.data)
+    $scope.gramResults = resp.data[1];
+  })
+  .catch(function(err){
+    console.log("Error displaying photos on profile page:", err.message);
   });
 });
 
@@ -63,25 +86,27 @@ app.controller('newUserController', function($scope, $state, CruiserGram_api){
 });
 
 app.controller('postGramController', ['$scope', 'Upload', function ($scope, Upload, $state, CruiserGram_api) {
-    //Image cropping
-    $scope.myImage='';
-    $scope.myCroppedImage='';
-
-    var handleFileSelect=function(evt) {
-      var file=evt.currentTarget.files[0];
-      var reader = new FileReader();
-      reader.onload = function (evt) {
-        $scope.$apply(function($scope){
-          $scope.myImage=evt.target.result;
-        });
-      };
-      reader.readAsDataURL(file);
-    };
+    // Image cropping
+    // $scope.myImage='';
+    // $scope.myCroppedImage='';
+    //
+    // var handleFileSelect=function(evt) {
+    //   var file=evt.currentTarget.files[0];
+    //   var reader = new FileReader();
+    //   reader.onload = function (evt) {
+    //     $scope.$apply(function($scope){
+    //       $scope.myImage=evt.target.result;
+    //     });
+    //   };
+    //   reader.readAsDataURL(file);
+    // };
 
     // upload later on form submit
     $scope.submit = function() {
       if ($scope.form.file.$valid && $scope.file) {
         $scope.upload($scope.file);
+        console.log('IS this trying to state.go');
+          $state.go('grams');
       }
 
     };
@@ -91,6 +116,7 @@ app.controller('postGramController', ['$scope', 'Upload', function ($scope, Uplo
       var user_id = 'mountainlife';
       var avatar_url = '/images/cruiser_av.svg';
       var caption = $scope.caption;
+      console.log("In upload function", caption);
         Upload.upload({
             url: '/gram',
             data: {
@@ -101,15 +127,16 @@ app.controller('postGramController', ['$scope', 'Upload', function ($scope, Uplo
             }
         }).then(function (resp) {
             console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-            // $scope.upload_complete = true;
-            // $state.go('grams');
+            $scope.upload_complete = true;
             console.log(caption);
         }, function (resp) {
             console.log('Error status: ' + resp.status);
         }, function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+
         });
+
     };
     // for multiple files:
     // $scope.uploadFiles = function (files) {
@@ -151,7 +178,17 @@ app.config(function($stateProvider, $urlRouterProvider){
     url: '/postGram',
     templateUrl: '/templates/postGram.html',
     controller: 'postGramController'
-  });
+  })
 
-  $urlRouterProvider.otherwise('/')
+  .state({
+    name: 'profile',
+    url: '/profile',
+    templateUrl: '/templates/profile.html',
+    controller: 'profileController'
+  })
+  ;
+
+
+
+  $urlRouterProvider.otherwise('/');
 });

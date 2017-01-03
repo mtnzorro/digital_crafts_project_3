@@ -5,18 +5,12 @@
     ngf-accept="'image/*'" ngf-capture="'camera'" ngf-max-size="10MB" ngf-resize="{width: 1080, height: 1080, quality: 1.0}"
     >Select Image</div>
 
-    <div ng-if="file" class="upload_container">
-      <img class="thumbnail" ngf-thumbnail="file || '/images/cruiser_av.png'">
-      <div class="cropArea">
-          <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
-        </div>
-        <div>Cropped Image:</div>
- <div><img ng-src="{{myCroppedImage}}" /></div>
+    <div ng-show="file" class="upload_container">
+      <img class="thumbnail" ngf-thumbnail="file">
+      <input class="u-full-width" ng-model="caption" type="text" name="" placeholder = "Caption this photo">
         <button class="button" type="submit" ng-click="submit()">Post</button>
-
     </div>
 
-<input ng-if="file" class="u-full-width" ng-model="caption" type="text" name="" placeholder = "Caption this photo">
   <!-- Multiple files -->
   <!-- <div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div> -->
   <!-- Drop files: <div ngf-drop ng-model="files" class="drop-box">Drop</div> -->
