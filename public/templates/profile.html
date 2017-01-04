@@ -1,6 +1,20 @@
 
+  <button class="button" ng-click="signOut()" >Sign out</button>
 <div class="gramWrapper" ng-repeat = "gram in gramResults">
 <div class="gram_timeline_wrapper">
     <img class="gram_timeline" src="{{gram.url}}" alt="">
 </div>
 </div>
+
+
+
+    <footer class="footer">
+        <div class="container footer_wrapper">
+          <div class="footer_icons">
+            <i ui-sref="grams" class="fa fa-home" aria-hidden="true"></i>
+            <i ui-sref="postGram" class="fa fa-plus-square" aria-hidden="true"></i>
+            <i ui-sref="profile" class="fa fa-user-o" aria-hidden="true"></i>
+          </div>
+
+      </div>
+    </footer>

@@ -1,5 +1,8 @@
 var app = angular.module('CruiserUp', ['ui.router', 'ngFileUpload', 'ngCookies', 'ngImgCrop']);
 
+
+
+
 app.factory("CruiserGram_api", function factoryFunction($http, $state){
   var service = {};
 //   service.worldGram = function() {
@@ -8,18 +11,18 @@ app.factory("CruiserGram_api", function factoryFunction($http, $state){
 //   });
 // };
 
-  service.userSignup = function(user_id, password, email, avatar_url) {
-  return $http({
-    url: '/new_user',
-    method: "POST",
-    data: {
-      user_id : user_id,
-      avatar_url  : avatar_url,
-      password : password,
-      email: email
-    }
-  });
-};
+//   service.userSignup = function(user_id, password, email, avatar_url) {
+//   return $http({
+//     url: '/new_user',
+//     method: "POST",
+//     data: {
+//       user_id : user_id,
+//       avatar_url  : avatar_url,
+//       password : password,
+//       email: email
+//     }
+//   });
+// };
 
   service.gramDisplay = function(){
     return $http({
@@ -36,15 +39,61 @@ app.factory("CruiserGram_api", function factoryFunction($http, $state){
     });
   };
 
+  service.upvote = function(gram_id) {
+    return $http({
+      url: '/api/upvote',
+      method: "POST",
+      data: {
+        gram_id: gram_id
+      }
+    });
+  };
+
 return service;
 });
 
 
-app.controller('HomeController', function($scope, $state, CruiserGram_api){
+app.controller('HomeController', function($scope, $cookies, $state, CruiserGram_api){
+  function onSuccess(googleUser) {
+     console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+   }
 
+   function onFailure(error) {
+     console.log(error);
+   }
+
+   $scope.renderButton = function () {
+     gapi.signin2.render('my-signin2', {
+       'scope': 'profile email',
+       'width': 240,
+       'height': 50,
+       'longtitle': true,
+       'theme': 'light',
+       'onsuccess': onSignIn,
+       'onfailure': onFailure
+     });
+   };
+   $scope.renderButton();
+
+  function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    console.log(profile.ofa);
+    // $scope.id_token = googleUser.getAuthResponse().id_token;
+    $scope.id_token = profile.getEmail();
+    // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    $scope.userName = profile.ofa;
+    console.log('Name: ' + profile.getName());
+    $scope.avatar = profile.getImageUrl();
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail());
+    $cookies.put('user_id', $scope.id_token);
+    $cookies.put('avatar', $scope.avatar);
+    $cookies.put('name', $scope.userName);
+    $state.go('grams');
+  }
 });
 
-app.controller('GramsController', function($scope, $stateParams, $state, CruiserGram_api){
+app.controller('GramsController', function($scope, $cookies, $stateParams, $state, CruiserGram_api){
 
   CruiserGram_api.gramDisplay()
   .then(function(resp){
@@ -54,38 +103,64 @@ app.controller('GramsController', function($scope, $stateParams, $state, Cruiser
   .catch(function(err){
     console.log("Error displaying photos:", err.message);
   });
+
+  $scope.upvote = function(gram_id){
+
+    CruiserGram_api.upvote(gram_id)
+    .then(function(resp){
+    console.log("Gram is upvoted", resp);
+  });
+  $state.go('grams')
+};
 });
 
-app.controller('profileController', function($scope, $stateParams, $state, CruiserGram_api){
-    $scope.name = $stateParams.name;
-  CruiserGram_api.loadProfile($scope.name)
+app.controller('profileController', function($scope, $cookies, $stateParams, $state, CruiserGram_api){
+  $scope.userId = $cookies.get('user_id');
+  CruiserGram_api.loadProfile($scope.userId)
   .then(function(resp){
     $scope.userResults = resp.data[0];
-    // console.log(resp.data)
+    console.log(resp.data);
     $scope.gramResults = resp.data[1];
   })
   .catch(function(err){
     console.log("Error displaying photos on profile page:", err.message);
   });
-});
 
-app.controller('newUserController', function($scope, $state, CruiserGram_api){
-  $scope.submitUser = function(){
-    if($scope.password1 === $scope.password2){
-      $scope.avatar_url = '/images/cruiser_av.png';
-      CruiserGram_api.userSignup($scope.user_id, $scope.password1, $scope.email, $scope.avatar_url)
-      .then(function(){
-        console.log('User signup successful');
-        $state.go('grams');
-      })
-      .catch(function(err){
-        console.log("User signup error:", err.message);
+
+
+  $scope.signOut = function() {
+    gapi.load('auth2', function(){
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+        // $cookies.remove('id_token');
+        $cookies.remove('avatar');
+        $cookies.remove('name');
+        $state.go('home');
       });
-    }
+    });
+
+
   };
 });
 
-app.controller('postGramController', ['$scope', 'Upload', '$state', function ($scope, Upload, $state, CruiserGram_api) {
+// app.controller('newUserController', function($scope, $state, CruiserGram_api){
+//   $scope.submitUser = function(){
+//     if($scope.password1 === $scope.password2){
+//       $scope.avatar_url = '/images/cruiser_av.png';
+//       CruiserGram_api.userSignup($scope.user_id, $scope.password1, $scope.email, $scope.avatar_url)
+//       .then(function(){
+//         console.log('User signup successful');
+//         $state.go('grams');
+//       })
+//       .catch(function(err){
+//         console.log("User signup error:", err.message);
+//       });
+//     }
+//   };
+// });
+
+app.controller('postGramController', ['$scope', 'Upload', '$state', '$cookies', function ($scope, Upload, $state, $cookies, CruiserGram_api) {
     // Image cropping
     // $scope.myImage='';
     // $scope.myCroppedImage='';
@@ -105,7 +180,7 @@ app.controller('postGramController', ['$scope', 'Upload', '$state', function ($s
     $scope.submit = function() {
       if ($scope.form.file.$valid && $scope.file) {
         $scope.upload($scope.file);
-        console.log('IS this trying to state.go');
+
 
       }
 
@@ -113,14 +188,16 @@ app.controller('postGramController', ['$scope', 'Upload', '$state', function ($s
 
     // upload on file select or drop
     $scope.upload = function () {
-      var user_id = 'mountainlife';
-      var avatar_url = '/images/cruiser_av.svg';
+      var user_id = $cookies.get('user_id');
+      var avatar_url = $cookies.get('avatar');
       var caption = $scope.caption;
+      var userName = $cookies.get('name');
       console.log("In upload function", caption);
         Upload.upload({
             url: '/gram',
             data: {
             file: $scope.file,
+            name: userName,
             user_id: user_id,
             avatar_url: avatar_url,
             caption: caption,

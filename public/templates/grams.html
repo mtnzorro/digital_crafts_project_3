@@ -5,20 +5,22 @@
     <div class="gram_content_wrapper">
       <div class="gram_header_wrapper">
         <div class="gram_text_content">
-            <img class="user_avatar" src="{{gram.avatar_url}}" alt="">
+
+            <img class="user_avatar" ng-src="{{gram.avatar_url}}" alt="">
             <div class="gram_text_wrapper">
                   <p class="user_id">
-              {{gram.user_id}}
+              {{gram.name}}
             </p>
             <p>
               {{gram.date | date:"MM/dd/yyyy @ h:mma"}}
             </p>
             </div>
 
-
+              <img ng-click = "upvote(gram._id)" class="user_avatar" ng-src="/images/thumbs-up_inline.png" alt="">
+              <p>{{gram.count}}</p>
         </div>
         <div class="gram_timeline_wrapper">
-            <img class="gram_timeline" src="{{gram.url}}" alt="">
+            <img class="gram_timeline" ng-src="{{gram.url}}" alt="">
         </div>
 
         <p class="gram_text_content">
@@ -31,3 +33,14 @@
     </div>
 
 </div>
+
+<footer class="footer">
+    <div class="container footer_wrapper">
+      <div class="footer_icons">
+        <i ui-sref="grams" class="fa fa-home" aria-hidden="true"></i>
+        <i ui-sref="postGram" class="fa fa-plus-square" aria-hidden="true"></i>
+        <i ui-sref="profile" class="fa fa-user-o" aria-hidden="true"></i>
+      </div>
+
+  </div>
+</footer>

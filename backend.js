@@ -95,9 +95,11 @@ const User = mongoose.model('User', {
 const Gram = mongoose.model('Gram', {
   url: String,
   date: Date,
+  name: String,
   user_id: String,
   caption: String,
   avatar_url: String,
+  count: Number,
   comments: [String]
 });
 
@@ -165,19 +167,19 @@ app.post('/new_user', function(req,res){
 app.post('/gram', multer.single('file'), function(req, res) {
   console.log(req.file.filename);
   console.log(req.body);
-
   var url = '/images/my-uploads/' + req.file.filename;
   console.log(url);
   var user_id = req.body.user_id;
   var name = req.body.name;
+  console.log(name);
   var avatar_url = req.body.avatar_url;
   var caption = req.body.caption;
   var date = new Date();
   //add
   return newGram(url, date, user_id, name, avatar_url, caption)
   .then(function(gram){
-    console.log(gram);
-    console.log(caption);
+    // console.log(gram);
+    // console.log(caption);
     res.send(gram);
     console.log("Created new Gram");
   })
@@ -188,9 +190,9 @@ app.post('/gram', multer.single('file'), function(req, res) {
 
 
 app.get('/api/photos', function(req,res){
-  Gram.find().sort({date:-1})
+  Gram.find().sort({count:-1}).sort({date:-1})
   .then(function(results){
-    console.log("Photo results", results);
+    // console.log("Photo results", results);
     res.send(results);
   });
 });
@@ -201,11 +203,11 @@ app.get('/api/profile-info', function (req, res) {
   console.log(user_id);
   var profile_results = [];
   bluebird.all([
-    Gram.find({ user_id: user_id }).sort({date:-1}),
+    Gram.find({ user_id: user_id }).sort({count:-1}).sort({date:-1}),
     User.findById(user_id)
   ])
   .spread(function(grams, user) {
-    console.log(grams);
+    // console.log(grams);
     var grams_arr = [];
     profile_results.push(user);
     profile_results.push(grams);
@@ -219,6 +221,16 @@ app.get('/api/profile-info', function (req, res) {
 // });
 // console.log(feed);
 
+app.post('/api/upvote', function(req,res){
+  var gram_id = req.body.gram_id;
+  Gram.update({_id :gram_id}, {$inc: {"count": 1}})
+  .then(function(result){
+    console.log(result);
+    res.send(result);
+  }
+);
+
+});
 
 
 app.listen(3000, function() {
