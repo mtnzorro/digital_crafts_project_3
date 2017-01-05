@@ -117,12 +117,14 @@ body {
 }
 
 .gram_text_content{
-  width: 65em;
+  width: 39em;
+  font-size: 2em;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   border: solid 1px white;
   border-radius: 4px;
+  background-color: grey;
 }
 
 .gram_header_wrapper {

@@ -9,88 +9,28 @@ var bluebird = require('bluebird');
 var bcrypt = require('bcrypt');
 var moment = require('moment');
 var uuidV4 = require('uuid/v4');
-
-//Google credentials
-var google = require('googleapis');
-var urlshortener = google.urlshortener('v1');
-
-process.env.GOOGLE_APPLICATION_CREDENTIALS = 'public/CruiserGram-0ff72a32dd1a.json';
-
-var params = {
-  shortUrl: 'http://goo.gl/xKbRu3'
-};
-
-google.auth.getApplicationDefault(function(err, authClient) {
-   if (err) {
-     return (err);
-   }});
-
-//Cloud storage
 var Storage = require('@google-cloud/storage');
 var CLOUD_BUCKET = 'cruisergram-153403';
-const storage = Storage({
-  projectId: 'cruisergram-153403'
-});
-const bucket = storage.bucket(CLOUD_BUCKET);
 
-//Cloud uploading
-
-
-// [START public_url]
-function getPublicUrl (filename) {
-  return `https://storage.googleapis.com/${CLOUD_BUCKET}/${filename}`;
-}
-
-// Express middleware that will automatically pass uploads to Cloud Storage.
-// req.file is processed and will have two new properties:
-// * ``cloudStorageObject`` the object name in cloud storage.
-// * ``cloudStoragePublicUrl`` the public url to the object.
-// [START process]
-function sendUploadToGCS (req, res, next) {
-  if (!req.file) {
-    return next();
-  }
-
-  const gcsname = Date.now() + req.file.originalname;
-  const file = bucket.file(gcsname);
-
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: req.file.mimetype
-    }
-  });
-
-  stream.on('error', (err) => {
-    req.file.cloudStorageError = err;
-    next(err);
-  });
-
-  stream.on('finish', () => {
-    req.file.cloudStorageObject = gcsname;
-    req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
-    next();
-  });
-
-  stream.end(req.file.buffer);
-}
-
-const Multer = require('multer');
-const multer = Multer({
-  storage: Multer.MemoryStorage,
-});
-
-
-
-// var storage = Multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, './public/images/my-uploads')
-//   },
-//   filename: function (req, file, cb) {
-//     var fieldname = uuidV4();
-//   cb(null, fieldname + '.jpg' );
-// }
+// var storage = Storage({
+//   projectId: 'cruisergram-153403'
 // });
+// var bucket = storage.bucket(CLOUD_BUCKET);
+const Multer = require('multer');
+var storage = Multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images/my-uploads')
+  },
+  filename: function (req, file, cb) {
+    var fieldname = uuidV4();
+  cb(null, fieldname + '.jpg' );
+}
+});
 
+var multer = Multer({
+  storage: storage,
+
+});
 
 var saltRounds = 10;
 
@@ -226,31 +166,28 @@ app.post('/new_user', function(req,res){
 });
 
 
-app.post('/gram', multer.single('file'), sendUploadToGCS, function(req, res, next) {
-  // let data = req.body;
-  // var url = '/images/my-uploads/' + req.file.filename;
-
+app.post('/gram', multer.single('file'), function(req, res) {
+  console.log(req.file.filename);
+  console.log(req.body);
+  var url = '/images/my-uploads/' + req.file.filename;
+  console.log(url);
   var user_id = req.body.user_id;
   var name = req.body.name;
+  console.log(name);
   var avatar_url = req.body.avatar_url;
   var caption = req.body.caption;
   var date = new Date();
-
-  if (req.file && req.file.cloudStoragePublicUrl) {
-    console.log("Made it inside the upload check");
-     var url = req.file.cloudStoragePublicUrl;
-     console.log(url);
-     return newGram(url, date, user_id, name, avatar_url, caption)
-     .then(function(gram){
-       // console.log(gram);
-       // console.log(caption);
-       res.send(gram);
-       console.log("Created new Gram");
-     })
-     .catch(function(err) {
-         console.log("Error posting gram: ", err.stack);
-       });
-   }
+  //add
+  return newGram(url, date, user_id, name, avatar_url, caption)
+  .then(function(gram){
+    // console.log(gram);
+    // console.log(caption);
+    res.send(gram);
+    console.log("Created new Gram");
+  })
+  .catch(function(err) {
+      console.log("Error posting gram: ", err.stack);
+    });
   });
 
 
