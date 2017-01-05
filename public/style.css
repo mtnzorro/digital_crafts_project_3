@@ -73,7 +73,7 @@ body {
 }
 .gram_timeline_wrapper{
     width: 65em;
-    height: 65em;
+    height: 50em;
     display: flex;
     align-items: center;
     border: solid .1em white;
@@ -117,8 +117,8 @@ body {
 }
 
 .gram_text_content{
-  width: 39em;
-  font-size: 2em;
+  width: 65em;
+  /*font-size: 2em;*/
   display: flex;
   flex-direction: row;
   justify-content: space-between;
