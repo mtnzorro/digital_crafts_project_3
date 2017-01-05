@@ -6,18 +6,21 @@
       <div class="gram_header_wrapper">
         <div class="gram_text_content">
 
-            <img class="user_avatar" ng-src="{{gram.avatar_url}}" alt="">
+
             <div class="gram_text_wrapper">
+              <img class="user_avatar" ng-src="{{gram.avatar_url}}" alt="">
                   <p class="user_id">
               {{gram.name}}
             </p>
-            <p>
+            <p class="user_id">
               {{gram.date | date:"MM/dd/yyyy @ h:mma"}}
             </p>
             </div>
-
-              <img ng-click = "upvote(gram._id)" class="user_avatar" ng-src="/images/thumbs-up_inline.png" alt="">
+            <div class="">
+              <img ng-click = "upvote(gram._id)" class="like_button" ng-src="/images/like.png" alt="">
               <p>{{gram.count}}</p>
+            </div>
+
         </div>
         <div class="gram_timeline_wrapper">
             <img class="gram_timeline" ng-src="{{gram.url}}" alt="">

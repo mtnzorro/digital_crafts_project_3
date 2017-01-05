@@ -1,8 +1,11 @@
 
-  <button class="button" ng-click="signOut()" >Sign out</button>
+<div class="sign_out_button_wrapper">
+  <button class="button sign_out_button" ng-click="signOut()" >Sign out</button>
+</div>
+
 <div class="gramWrapper" ng-repeat = "gram in gramResults">
 <div class="gram_timeline_wrapper">
-    <img class="gram_timeline" src="{{gram.url}}" alt="">
+    <img class="gram_timeline" ng-src="{{gram.url}}" alt="">
 </div>
 </div>
 

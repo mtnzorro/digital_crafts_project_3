@@ -39,12 +39,13 @@ app.factory("CruiserGram_api", function factoryFunction($http, $state){
     });
   };
 
-  service.upvote = function(gram_id) {
+  service.upvote = function(gram_id, user_id) {
     return $http({
       url: '/api/upvote',
       method: "POST",
       data: {
-        gram_id: gram_id
+        gram_id: gram_id,
+        user_id: user_id
       }
     });
   };
@@ -105,12 +106,17 @@ app.controller('GramsController', function($scope, $cookies, $stateParams, $stat
   });
 
   $scope.upvote = function(gram_id){
-
-    CruiserGram_api.upvote(gram_id)
+    var user_id = $cookies.get('user_id');
+    CruiserGram_api.upvote(gram_id, user_id)
     .then(function(resp){
+      CruiserGram_api.gramDisplay()
+      .then(function(resp){
+        // console.log(resp.data)
+        $scope.gramResults = resp.data;
+      }); 
     console.log("Gram is upvoted", resp);
   });
-  $state.go('grams')
+
 };
 });
 
@@ -143,22 +149,6 @@ app.controller('profileController', function($scope, $cookies, $stateParams, $st
 
   };
 });
-
-// app.controller('newUserController', function($scope, $state, CruiserGram_api){
-//   $scope.submitUser = function(){
-//     if($scope.password1 === $scope.password2){
-//       $scope.avatar_url = '/images/cruiser_av.png';
-//       CruiserGram_api.userSignup($scope.user_id, $scope.password1, $scope.email, $scope.avatar_url)
-//       .then(function(){
-//         console.log('User signup successful');
-//         $state.go('grams');
-//       })
-//       .catch(function(err){
-//         console.log("User signup error:", err.message);
-//       });
-//     }
-//   };
-// });
 
 app.controller('postGramController', ['$scope', 'Upload', '$state', '$cookies', function ($scope, Upload, $state, $cookies, CruiserGram_api) {
     // Image cropping

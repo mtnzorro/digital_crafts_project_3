@@ -100,7 +100,8 @@ const Gram = mongoose.model('Gram', {
   caption: String,
   avatar_url: String,
   count: Number,
-  comments: [String]
+  comments: [String],
+  liked: [String]
 });
 
 
@@ -129,7 +130,8 @@ function newGram(url, date, user_id, name, avatar_url, caption) {
     name: name,
     avatar_url: avatar_url,
     caption: caption,
-    commments: []
+    commments: [],
+    liked: []
   });
 
   return gram.save()
@@ -223,12 +225,32 @@ app.get('/api/profile-info', function (req, res) {
 
 app.post('/api/upvote', function(req,res){
   var gram_id = req.body.gram_id;
-  Gram.update({_id :gram_id}, {$inc: {"count": 1}})
-  .then(function(result){
-    console.log(result);
-    res.send(result);
-  }
-);
+  var user_id = req.body.user_id;
+  console.log(user_id);
+  Gram.findById(gram_id)
+  .then(function(gram){
+    // console.log(gram);
+    if(gram.liked.includes(user_id)){
+      console.log("User already liked");
+      res.sendStatus(200);
+    }
+    else{
+      Gram.update({_id :gram_id}, {$inc: {"count": 1}})
+      .then(function(result){
+        // console.log(result);
+      }
+    )
+    .then(function(){
+      Gram.update({_id :gram_id}, {"liked": user_id})
+      .then(function(result){
+        console.log(result);
+        res.sendStatus(200);
+      }
+    );
+  });
+    }
+  });
+
 
 });
 
