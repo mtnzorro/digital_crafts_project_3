@@ -1,6 +1,6 @@
 #CruiserGram: LandCruiser pics for days!
 
-Website: (http://cruisergram.club)
+Website: (https://cruisergram.club)
 
 ##Contents:
 
@@ -64,6 +64,7 @@ Display all user grams on main "gram" page
 User profile page with user uploaded Grams
 Caption for images upon upload
 Like images
+HTTPS
 
 #####Stretch Goals:
 Google Cloud storage (IMPLEMENTED!!)
@@ -122,7 +123,114 @@ I set the functions to scope variables, then call the renderButton function on t
 
 2.  Google Cloud Storage:
 
-After reading an article about how someone setup a Pokemon related social media site that relied on server side storage (and then inadvertantly crashed said servers) I knew I wanted to work with cloud storage for the images.  Having no grandiose illusions of the popularity of my site, I wanted to at least explore the option, since there was a clear, real world application, and my site was basically 100% image storage.  It, like 
+After reading an article about how someone setup a Pokemon related social media site that relied on server side storage (and then inadvertantly crashed said servers) I knew I wanted to work with cloud storage for the images.  Having no grandiose illusions of the popularity of my site, I wanted to at least explore the option, since there was a clear, real world application, and my site is essentially 100% image storage.  
+
+The process of uploading and storing locally proved challenging in its own right.  After researching and attempting to utilize ng-file-upload to handle the entire upload process, I started to get a grasp on the process, and figured out the need for a middleware solution on the backend to facilitate the storage process.  
+
+Here's the process:
+
+  a. Insert the ng-file-upload directive into your HTML.  Mine was within a template called postGram, and the example code I selected was a form, and I chose to only display the "Select Image" button until the selection of an image.  The module also provides a means for a thumbnail image display which you can see represented in ngf-thumbnail.
+  
+  `
+<form name="form">
+  <!-- Single Image with validations -->
+<div class="sign_out_button_wrapper">
+  <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+    ngf-accept="'image/*'" ngf-max-size="10MB" ngf-resize="{width: 1080, height: 1080, quality: 1.0}"
+    >Select Image</div>
+    <button ng-show="file" class="button post_button" type="submit" ng-click="submit()">Post</button>
+</div>
+
+    <div ng-show="file" class="upload_container">
+      <img class="thumbnail" ngf-thumbnail="file">
+      <input class="u-full-width" ng-model="caption" type="text" name="" placeholder = "Caption this photo">
+
+    </div>
+</form>
+
+`
+b.  Add in the javascript into your controller (if using states), or your front end JS file.  Ng-file-upload will take in the file passed through your html page, and pass it to your backend (in this case my '/gram' route).  In this example I'm also passing a user_id parameter, to have some way of identifying the photo in a later query.  On click of the submit button on the HTML page, the $scope.submit function is called, which checks to make sure that a valid file has been selected, thereafter calling the upload funtion.  We'll explore more of what happens next in the backend. 
+
+```
+  $scope.submit = function() {
+      if ($scope.form.file.$valid && $scope.file) {
+        $scope.upload($scope.file);
+      }
+    };
+
+    // upload on file select or drop
+    $scope.upload = function () {
+      var user_id = $cookies.get('user_id');
+        Upload.upload({
+            url: '/gram',
+            data: {
+            file: $scope.file,
+            user_id: user_id,
+            }
+        }).then(function (resp) {
+            $scope.upload_complete = true;
+           
+        }, function (resp) {
+            console.log('Error status: ' + resp.status);
+        }, function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+
+        });
+
+    };
+    
+  ```
+  c.  Middleware (MULTER to the rescue!)
+  
+  I'm not sure why it took me so long to figure out the missing piece, but the Multer module is what you want to use to handle the file storage after ng-file-upload routes to your backend.  Multer is middleware that will help to then either store the file locally (or if you're daring, store to cloud storage via something like Google or AWS).  Here's how I set up Multer (I'm assuming you know to 'npm install multer' first):
+
+```
+const Multer = require('multer');
+var storage = Multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images/my-uploads')
+  },
+  filename: function (req, file, cb) {
+    var fieldname = uuidV4();
+  cb(null, fieldname + '.jpg' );
+}
+});
+
+var multer = Multer({
+  storage: storage,
+
+});
+
+```
+
+This sets up Multer for local storage in my public images my-uploads directory.  I initially set this up so that i hashed the file name with UUID4, but that's unnecessary.  You can name the files however you'd like.
+
+d.  The route!  Backend fun:
+
+```
+app.post('/gram', multer.single('file'), function(req, res) {
+  var url = '/images/my-uploads/' + req.file.filename;
+  console.log(url);
+  var user_id = req.body.user_id;
+  var name = req.body.name;
+  console.log(name);
+  var avatar_url = req.body.avatar_url;
+  var caption = req.body.caption;
+  var date = new Date();
+  //add
+  return newGram(url, date, user_id, name, avatar_url, caption)
+  .then(function(gram){
+    // console.log(gram);
+    // console.log(caption);
+    res.send(gram);
+    console.log("Created new Gram");
+  })
+  .catch(function(err) {
+      console.log("Error posting gram: ", err.stack);
+    });
+  });
+```
 
 
 
