@@ -4,13 +4,14 @@
   <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
     ngf-accept="'image/*'" ngf-max-size="10MB" ngf-resize="{width: 1080, height: 1080, quality: 1.0}"
     >Select Image</div>
+    <button ng-show="file" class="button post_button" type="submit" ng-click="submit()">Post</button>
 </div>
 
 
     <div ng-show="file" class="upload_container">
       <img class="thumbnail" ngf-thumbnail="file">
       <input class="u-full-width" ng-model="caption" type="text" name="" placeholder = "Caption this photo">
-        <button class="button" type="submit" ng-click="submit()">Post</button>
+
     </div>
 
   <!-- Multiple files -->

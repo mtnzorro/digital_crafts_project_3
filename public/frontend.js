@@ -66,8 +66,8 @@ app.controller('HomeController', function($scope, $cookies, $state, CruiserGram_
    $scope.renderButton = function () {
      gapi.signin2.render('my-signin2', {
        'scope': 'profile email',
-       'width': 240,
-       'height': 50,
+       'width': 400,
+       'height': 70,
        'longtitle': true,
        'theme': 'light',
        'onsuccess': onSignIn,
@@ -83,10 +83,10 @@ app.controller('HomeController', function($scope, $cookies, $state, CruiserGram_
     $scope.id_token = profile.getEmail();
     // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
     $scope.userName = profile.ofa;
-    console.log('Name: ' + profile.getName());
+    // console.log('Name: ' + profile.getName());
     $scope.avatar = profile.getImageUrl();
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
+    // console.log('Image URL: ' + profile.getImageUrl());
+    // console.log('Email: ' + profile.getEmail());
     $cookies.put('user_id', $scope.id_token);
     $cookies.put('avatar', $scope.avatar);
     $cookies.put('name', $scope.userName);
@@ -113,7 +113,7 @@ app.controller('GramsController', function($scope, $cookies, $stateParams, $stat
       .then(function(resp){
         // console.log(resp.data)
         $scope.gramResults = resp.data;
-      }); 
+      });
     console.log("Gram is upvoted", resp);
   });
 

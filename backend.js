@@ -9,7 +9,7 @@ var bluebird = require('bluebird');
 var bcrypt = require('bcrypt');
 var moment = require('moment');
 var uuidV4 = require('uuid/v4');
-
+var saltRounds = 10;
 //Google credentials
 var google = require('googleapis');
 var urlshortener = google.urlshortener('v1');
@@ -81,18 +81,7 @@ const multer = Multer({
 
 
 
-// var storage = Multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, './public/images/my-uploads')
-//   },
-//   filename: function (req, file, cb) {
-//     var fieldname = uuidV4();
-//   cb(null, fieldname + '.jpg' );
-// }
-// });
 
-
-var saltRounds = 10;
 
 
 
@@ -202,30 +191,7 @@ function newGram(url, date, user_id, name, avatar_url, caption) {
 }
 
 
-        // newUser();
-app.post('/new_user', function(req,res){
-  var user_id = req.body.user_id;
-  var avatar_url = req.body.avatar_url;
-  var password = req.body.password;
-  var email = req.body.email;
-  bcrypt.hash(password, saltRounds)
-    .then(function(hash){
-      return hash;
-    })
-    .then(function(hash){
-    return newUser(user_id, avatar_url, hash, email);
-    })
-    .then(function(user){
-      console.log(user);
-      res.send(user);
-      console.log("Created new user");
-    })
-    .catch(function(err){
-      console.log("Failed to create new User", err.message);
-    });
-});
-
-
+//Post a new Gram
 app.post('/gram', multer.single('file'), sendUploadToGCS, function(req, res, next) {
   // let data = req.body;
   // var url = '/images/my-uploads/' + req.file.filename;
@@ -253,7 +219,7 @@ app.post('/gram', multer.single('file'), sendUploadToGCS, function(req, res, nex
    }
   });
 
-
+//Display all Grams to gram page
 app.get('/api/photos', function(req,res){
   Gram.find().sort({count:-1}).sort({date:-1})
   .then(function(results){
@@ -279,13 +245,8 @@ app.get('/api/profile-info', function (req, res) {
       res.send(profile_results);
   });
 });
-// var feed = new Instafeed({
-//     get: 'tagged',
-//     tagName: 'land cruiser',
-//     clientId: '0366715be32f43d583ff54494603c93c'
-// });
-// console.log(feed);
 
+//Upvote-like a Gram
 app.post('/api/upvote', function(req,res){
   var gram_id = req.body.gram_id;
   var user_id = req.body.user_id;

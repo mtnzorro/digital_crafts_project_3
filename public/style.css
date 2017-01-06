@@ -112,8 +112,8 @@ body {
 
 }
 
-.gram_content_wrapper{
-
+.post_button{
+  margin-left: 1em;
 }
 
 .gram_text_content{
@@ -186,8 +186,13 @@ body {
   justify-content: space-between;
 }
 .thumbnail{
-  width: 15em;
+  width: 40em;
   margin-bottom: .5em;
+}
+
+.gram_post{
+  height: 5em;
+  background-color: lightgrey;
 }
 
 .cropArea {
@@ -205,9 +210,45 @@ body {
 
 .sign_out_button_wrapper{
   display: flex;
+
   justify-content: center;
 }
 
 .user_name{
   margin-right: 1em;
+}
+
+@media (min-width: 1025px){
+
+.main_nav h3{display: inline-block;padding: .7em;margin: 0;font-size: 1.3em;}
+.img_icon{
+  width: 2.5em;
+}
+
+.home_wrapper{
+  height:25em;
+}
+.gram_timeline_wrapper{
+  width: 30em;
+  height: 30em;
+}
+
+.gram_text_content{
+  width: 30em;
+}
+.footer{
+  height: 3em;
+}
+
+.thumbnail{
+  width: 25em;
+  margin-bottom: .5em;
+}
+
+.footer_icons {
+  font-size: 1.5em
+}
+
+body{
+  margin-top: -5.5em;
 }
