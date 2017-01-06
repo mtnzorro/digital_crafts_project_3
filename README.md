@@ -79,7 +79,7 @@ Ionic build for native Android/Ios app
 1.  Google login:  
 
 Implementing Google login with an Angular template proved to be a bit more cumbersome than I'd initially planned.  I was able to implement the "default" option on my index.html page without much issue, but when moving it into my home.html template (within the UI-view) the button would not render.  In the end I actually went with a different setup within the controller for that home.html template:
-`
+```
 function onSuccess(googleUser) {
    //  console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
    }
@@ -118,7 +118,7 @@ function onSuccess(googleUser) {
     $state.go('grams');
   }
 });
-`
+```
 I set the functions to scope variables, then call the renderButton function on the loading of the page.  This successfully loads the button.  There is a lot of additional work involved within setting up your project with Google, which is well described on their website.  Make sure to set up a project WITH credentials.  That's the ID that you need--not the one that you assignn to your project.
 
 2.  Google Cloud Storage:
