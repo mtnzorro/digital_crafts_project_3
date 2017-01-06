@@ -1,5 +1,7 @@
 body {
   margin: 0;
+  margin-top: .5em;
+  margin-bottom: 7em;
   padding: 0;
   padding-top: 10em;
   background-color: #506d9b;
@@ -76,7 +78,9 @@ body {
     height: 50em;
     display: flex;
     align-items: center;
-    border: solid .1em white;
+    border-bottom: solid .1em white;
+    border-left: solid .1em white;
+    border-right: solid .1em white;
     border-radius: 4px;
     background-color: grey;
     overflow: hidden;
@@ -122,7 +126,22 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  border: solid 1px white;
+  border-top: solid 1px white;
+  border-right: solid 1px white;
+  border-left: solid 1px white;
+  border-radius: 4px;
+  background-color: grey;
+}
+
+.gram_footer_text_content{
+  width: 65em;
+  /*font-size: 2em;*/
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: solid 1px white;
+  border-right: solid 1px white;
+  border-left: solid 1px white;
   border-radius: 4px;
   background-color: grey;
 }
@@ -229,12 +248,15 @@ body {
   height:25em;
 }
 .gram_timeline_wrapper{
-  width: 30em;
-  height: 30em;
+  width: 35em;
+  height: 35em;
 }
 
 .gram_text_content{
-  width: 30em;
+  width: 35em;
+}
+.gram_footer_text_content{
+  width: 35em;
 }
 .footer{
   height: 3em;
@@ -260,4 +282,5 @@ body {
 
 body{
   margin-top: -5.5em;
+  margin-bottom: 5em;
 }
